@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Anna's Hundreds Chart</title>
+  <style>
+	h1 {
+	  text-align: center;
+	}
+	
+    #hundreds-chart {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+	  background-color: var(--background-color);
+    }
+
+    .number {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      font-size: 40px;
+      border: 1px solid black;
+      background-color: transparent;
+    }
+
+    .hovered {
+      background-color: lightblue;
+    }
+
+    .active {
+      background-color: yellow;
+    }
+
+    #clicked-number {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      padding: 10px;
+      background-color: white;
+      border: 1px solid black;
+      font-size: 48px;
+      display: none;
+    }
+
+    #random-number {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      padding: 10px;
+      background-color: white;
+      border: 1px solid black;
+      font-size: 48px;
+      display: none;
+    }
+
+    #start-button {
+      position: fixed;
+      bottom: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 10px;
+      background-color: white;
+      border: 1px solid black;
+      font-size: 48px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Anna's Hundreds Chart Hunt</h1>
+
+  <div id="hundreds-chart"></div>
+
+  <div id="clicked-number"></div>
+
+  <div id="random-number"></div>
+
+  <input type="button" id="start-button" value="Start">
+
+  <script>
+
+    // Create the hundreds chart
+    var hundredsChart = document.getElementById('hundreds-chart');
+    for (var i = 1; i <= 100; i++) {
+      var number = document.createElement('div');
+      number.classList.add('number');
+      number.dataset.number = i;
+      number.textContent = i;
+      hundredsChart.appendChild(number);
+    }
+
+    // Add event listeners to each number
+    document.querySelectorAll('.number').forEach(function(number) {
+      number.addEventListener('mouseover', function() {
+        this.classList.add('hovered');
+
+        // Hide the clicked number if it is different from the number that the mouse is over
+        if (document.getElementById('clicked-number').textContent !== this.dataset.number) {
+          document.getElementById('clicked-number').textContent = '';
+        }
+      });
+
+      number.addEventListener('mouseout', function() {
+        this.classList.remove('hovered');
+      });
+
+number.addEventListener('mousedown', function() {
+	this.classList.add('active');
+  if (this.classList.contains('number')) {
+    // The user clicked on a number element
+    // Display the clicked number in the lower right of the screen
+    document.getElementById('clicked-number').textContent = this.dataset.number;
+    document.getElementById('clicked-number').style.display = 'block';
+
+    // Check if the clicked value is the same as the random value
+    var clickedNumber = document.getElementById('clicked-number').textContent;
+    var randomNumber = document.getElementById('random-number').textContent;
+
+    // Display a "Correct!" or "Oops!" message under the start button
+    var message = document.createElement('div');
+    message.id = 'message';
+    message.style.position = 'fixed';
+    message.style.bottom = '10%';
+    message.style.left = '50%';
+    message.style.transform = 'translate(-50%, -50%)';
+    message.style.padding = '10px';
+    message.style.backgroundColor = 'white';
+    message.style.border = '1px solid black';
+    message.style.fontSize = '48px';
+    message.style.display = 'block';
+
+    if (clickedNumber === randomNumber) {
+	  message.style.backgroundColor = 'green';
+      message.textContent = 'Correct!';
+      document.getElementById('hundreds-chart').style.setProperty('--background-color', 'green');
+	  var randomNumber = Math.floor(Math.random() * 100);
+	  document.getElementById('random-number').textContent = randomNumber;
+    } else {
+	  message.style.backgroundColor = 'red';
+      message.textContent = 'Oops!';
+      document.getElementById('hundreds-chart').style.setProperty('--background-color', 'red');
+    }
+
+    document.body.appendChild(message);
+
+    setTimeout(function() {
+      document.body.removeChild(message);
+	  document.getElementById('hundreds-chart').style.setProperty('--background-color', 'white');
+    }, 1000);
+  }
+});
+
+
+      number.addEventListener('mouseup', function() {
+        this.classList.remove('active');
+      });
+    });
+
+    // Add event listener to the start button
+    document.getElementById('start-button').addEventListener('click', function() {
+      // Generate a random number
+      var randomNumber = Math.floor(Math.random() * 100);
+
+      // Display the random number in the random number box
+      document.getElementById('random-number').textContent = randomNumber;
+      document.getElementById('random-number').style.display = 'block';
+    });
+
+  </script>
+
+</body>
+</html>
